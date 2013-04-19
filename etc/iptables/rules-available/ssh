@@ -1,0 +1,3 @@
+-A INPUT -m tcp -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT
+-A OUTPUT -m tcp -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT
+

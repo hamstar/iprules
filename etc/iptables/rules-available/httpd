@@ -1,0 +1,2 @@
+-A INPUT -m tcp -p tcp --dport 80 -j ACCEPT
+-A OUTPUT -m tcp -p tcp --sport 80 -j ACCEPT

@@ -1,0 +1,6 @@
+# need to set net.ipv4.tcp_syncookies=1 in /etc/sysctl.conf
+# need to set net.netfilter.nf_conntrack_tcp_timeout_syn_recv=30 in /etc/sysctl.conf
+-N syn-flood
+-A syn-flood -m limit --limit 10/second --limit-burst 50 -j RETURN
+-A syn-flood -j LOG --log-prefix "SYN flood: "
+-A syn-flood -j DROP
