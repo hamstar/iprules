@@ -1,0 +1,8 @@
+#!/bin/bash
+
+source /etc/iptrules.conf
+
+echo "Generating rules file at $RULES_FILE using enabled rules:"
+iptlist
+
+cat "$E_PATH/*" > "$RULES_FILE"

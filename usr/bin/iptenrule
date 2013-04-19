@@ -1,0 +1,20 @@
+#!/bin/bash
+
+source /etc/iptrules.conf
+
+# Check if it's enabled
+if [ -e "$E_PATH/$1" ]; then
+  echo "Already enabled.";
+  exit 0;
+fi;
+
+# Check if there is such a rule
+if ! [ -e "$A_PATH/$1" ]; then
+  echo "No such rule called: $1";
+  exit 1;
+fi;
+
+# Print out the comments in case other action needs to be taken
+grep -P '^#' "$A_PATH/$1"|sed 's/^#/^/';
+
+ln -s "$A_PATH/$1" "$E_PATH/$1";

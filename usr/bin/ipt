@@ -1,0 +1,24 @@
+#!/bin/bash
+
+usage() {
+  echo "Usage: ipt <options> [rulename]
+
+  -e     enable rule
+  -d     disable rule
+  -l     list enabled rules
+  -la    list available rules
+  -c     list enabled config
+  -g     generate rules file
+  -i     install rules into iptables";
+}
+
+case "$1" in
+  "-e") iptenrule $2 ;;
+  "-d") iptdisrule $2 ;;
+  "-l") iptlist ;;
+  "-la") iptlist -a ;;
+  "-c") iptconf ;;
+  "-g") iptgen ;;
+  "-i") iptinstall ;;
+  *) usage ;;
+esac;

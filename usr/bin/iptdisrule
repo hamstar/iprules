@@ -1,0 +1,10 @@
+#!/bin/bash
+
+source /etc/iptrules.conf
+
+if ! [ -e "$E_PATH/$1" ]; then
+  echo "Already disabled.";
+  exit 0;
+fi;
+
+unlink "$E_PATH/$1";

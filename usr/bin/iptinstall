@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source /etc/iptrules.conf
+
+iptgen
+iptables-restore < "RULES_FILE"

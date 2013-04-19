@@ -1,0 +1,7 @@
+#!/bin/bash
+
+source /etc/iptrules.conf
+
+echo "Configuration using currently enabled rules looks like:";
+
+cat "$E_PATH/*";
