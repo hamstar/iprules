@@ -3,9 +3,10 @@
 BASE_PATH="/etc/iptables";
 E_PATH="$BASE_PATH/rules-enabled";
 A_PATH="$BASE_PATH/rules-available";
+RULES_FILE="$BASE_PATH/iptables.rules";
 
 usage() {
-  echo "Usage: iptrule <e|d|g> [rulename]";
+  echo "Usage: iptrule <e|d|g|i> [rulename]";
   exit 0;
 }
 
@@ -33,12 +34,18 @@ disable() {
 }
 
 generate() {
-  cat "$E_PATH/*" > "$BASE_PATH/iptables.rules"
+  cat "$E_PATH/*" > "$RULES_FILE"
+}
+
+install() {
+  $0 g
+  iptables-restore < "RULES_FILE"
 }
 
 case in $1
   "e") enable $2 ;;
   "d") disable $2 ;;
   "g") generate ;;
+  "i") install ;;
   *) usage ;;
 esac;
