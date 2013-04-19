@@ -3,4 +3,11 @@
 source /etc/iptrules.conf
 
 iptgen
+
+echo `date +%Y-%m-%d %H:%M:%S`" : installing rules from $RULES_FILE into iptables"|tee -a $LOG;
 iptables-restore < "RULES_FILE"
+
+if [ "$?" != "0" ]; then
+  echo "Failed to install rules into iptables!"|tee -a $LOG;
+  exit 1;
+fi;

@@ -2,7 +2,7 @@
 
 source /etc/iptrules.conf
 
-echo "Generating rules file at $RULES_FILE using enabled rules:"
-iptlist
+echo "Generating rules file at $RULES_FILE using enabled rules:"|tee -a $LOG
+iptlist|tee -a $LOG
 
 cat "$E_PATH/*" > "$RULES_FILE"
