@@ -1,0 +1,44 @@
+#!/bin/bash
+
+BASE_PATH="/etc/iptables";
+E_PATH="$BASE_PATH/rules-enabled";
+A_PATH="$BASE_PATH/rules-available";
+
+usage() {
+  echo "Usage: iptrule <e|d|g> [rulename]";
+  exit 0;
+}
+
+enable() {
+  if [ -e "$E_PATH/$1" ]; then
+    echo "Already enabled.";
+    exit 0;
+  fi;
+  
+  if ! [ -e "$A_PATH/$1" ]; then
+    echo "No such rule called: $1";
+    exit 1;
+  fi;
+
+  ln -s "$A_PATH/$1" "$E_PATH/$1";
+}
+
+disable() {
+  if ! [ -e "$E_PATH/$1" ]; then
+    echo "Already disabled.";
+    exit 0;
+  fi;
+
+  unlink "$E_PATH/$1";
+}
+
+generate() {
+  cat "$E_PATH/*" > "$BASE_PATH/iptables.rules"
+}
+
+case in $1
+  "e") enable $2 ;;
+  "d") disable $2 ;;
+  "g") generate ;;
+  *) usage ;;
+esac;
