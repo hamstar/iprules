@@ -1,5 +1,5 @@
 Package: iptrules
-Version: 0.4-alpha
+Version: 0.5.12-beta
 Section: admin
 Priority: optional
 Architecture: all
