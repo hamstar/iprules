@@ -1,10 +1,10 @@
 Package: iptrules
-Version: 0.8
+Version: 0.9
 Section: admin
 Priority: optional
 Architecture: all
 Depends: iptables
-Installed-Size: 0
+Installed-Size: 128
 Maintainer: Robert McLeod <robert.mcleod@itpeople.co.nz>
 Description: Allows configuring iptables in the style of apache2 on debian
  iptrules allows you to use preconfigured rulefiles and custom rulefiles
