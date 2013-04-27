@@ -12,3 +12,22 @@ if ! [ -f "$POLICY_FILE" ]; then
   echo "Installing default accept policy file ($POLICY_FILE)"
   cp "/usr/share/iptrules/contrib/policy.rules" "$POLICY_FILE";
 fi;
+
+copy_rules() {
+  cp /usr/share/iptrules/rules/* "$A_PATH" $1;
+}
+
+# Copy over the rules if wanted
+if [ "$(ls $A_PATH|wc -l)" = "0" ]; then
+  copy_rules;
+else
+  echo -n "Do you want to install default rules? [y/o/N]: ";
+  read ANS;
+  case "$ANS" in
+    "o")  copy_rules ;;     # overwrite
+    "O")  copy_rules ;;     # overwrite
+    "y")  copy_rules -n ;;  # don't overwrite
+    "Y")  copy_rules -n ;;  # don't overwrite
+    *)  echo "You can find default rules in /usr/share/iptrules/rules/" ;;
+  esac;
+fi;
