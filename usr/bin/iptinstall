@@ -1,11 +1,11 @@
 #!/bin/bash
 
-source /etc/iptrules.conf
+source /etc/iptrules.conf;
 
-iptgen
+iptgen|tee -a $LOG;
 
-echo `date +%Y-%m-%d %H:%M:%S`" : installing rules from $RULES_FILE into iptables"|tee -a $LOG;
-iptables-restore < "RULES_FILE"
+echo `date +"%Y-%m-%d %H:%M:%S"`" : installing rules from $RULES_FILE into iptables"|tee -a $LOG;
+iptables-restore < "$RULES_FILE";
 
 if [ "$?" != "0" ]; then
   echo "Failed to install rules into iptables!"|tee -a $LOG;
