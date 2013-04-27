@@ -6,3 +6,9 @@ source /etc/iptrules.conf;
 if ! [ -f "$RULES_FILE" ]; then
   ipt -g;
 fi;
+
+# Copy over the policy file if none exists
+if ! [ -f "$POLICY_FILE" ]; then
+  echo "Installing default accept policy file ($POLICY_FILE)"
+  cp "/usr/share/iptrules/contrib/policy.rules" "$POLICY_FILE";
+fi;
