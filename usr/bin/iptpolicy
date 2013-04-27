@@ -1,0 +1,33 @@
+#!/bin/bash
+
+source /etc/iptrules.conf
+
+usage() {
+  echo "Usage: iptpolicy <option>";
+  echo "  --default-drop, -d      change policy to be default drop";
+  echo "  --default-accept, -a    change policy to be default accept";
+  echo "";
+}
+
+[ "$1" != "" ] || usage
+
+default_drop() {
+  echo "WARNING: be sure remote access is allowed (if needed) before installing default drop policy";
+  sed -i -e "s/INPUT ACCEPT/INPUT DROP/" "$POLICY_FILE"
+  sed -i -e "s/FORWARD ACCEPT/FORWARD DROP/" "$POLICY_FILE";
+  sed -i -e "s/OUTPUT ACCEPT/OUTPUT DROP/" "$POLICY_FILE";
+}
+
+default_accept() {
+  sed -i -e "s/INPUT DROP/INPUT ACCEPT/" "$POLICY_FILE"
+  sed -i -e "s/FORWARD DROP/FORWARD ACCEPT/" "$POLICY_FILE";
+  sed -i -e "s/OUTPUT DROP/OUTPUT ACCEPT/" "$POLICY_FILE";
+}
+
+case "$1" in
+  "--drop") default_drop ;;
+  "--accept") default_accept ;;
+  "-d") default_drop ;;
+  "-a") default_accept ;;
+  *) usage ;;
+esac;
