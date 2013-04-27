@@ -1,1 +1,8 @@
 #!/bin/bash
+
+source /etc/iptrules.conf;
+
+# Create the rules file if none exists
+if ! [ -f "$RULES_FILE" ]; then
+  ipt -g;
+fi;
