@@ -31,3 +31,8 @@ else
     *)  echo "You can find default rules in /usr/share/iptrules/rules/" ;;
   esac;
 fi;
+
+# Protect everything for root only access
+chown root:root /etc/iptables* /etc/iptrules.conf -R
+chmod o-rwx /etc/iptables* /etc/iptrules.conf -R
+chmod o-rwx /usr/bin/ipt*
