@@ -3,7 +3,7 @@
 source /etc/iptrules.conf
 
 if ! [ -e "$E_PATH/$1" ]; then
-  echo "Already disabled.";
+  echo "$1 already disabled.";
   exit 0;
 fi;
 

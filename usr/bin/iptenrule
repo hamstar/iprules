@@ -4,7 +4,7 @@ source /etc/iptrules.conf
 
 # Check if it's enabled
 if [ -e "$E_PATH/$1" ]; then
-  echo "Already enabled.";
+  echo "$1 rules already enabled.";
   exit 0;
 fi;
 
@@ -30,4 +30,3 @@ if [ "$?" != "0" ]; then
 fi;
 
 echo "$1 rules enabled";
-echo "Don't forget to run 'ipt -i' to install the rules";

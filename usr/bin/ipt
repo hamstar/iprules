@@ -13,11 +13,21 @@ usage() {
   -c     list enabled config
   -g     generate rules file
   -i     install rules into iptables
+  -f     disable all rules
 ";
 }
 
+enable_rules() {
+  for RULE in $*; do
+    [ "$RULE" = "-e" ] && continue;
+    iptenrule $RULE;
+  done;
+
+  echo "Don't forget to run 'ipt -i' to install the rules";
+}
+
 case "$1" in
-  "-e")   iptenrule $2 ;;
+  "-e")   enable_rules $* ;;
   "-dd")  iptpolicy -d ;;
   "-da")  iptpolicy -a ;;
   "-d")   iptdisrule $2 ;;
@@ -26,5 +36,6 @@ case "$1" in
   "-c")   iptconf ;;
   "-g")   iptgen ;;
   "-i")   iptinstall ;;
+  "-f")   iptflush ;;
   *) usage ;;
 esac;
