@@ -7,5 +7,9 @@ if [ "$1" = "-a" ]; then
   ls $A_PATH;
 else
   echo "Currently enabled rules";
-  ls $E_PATH;
+  if [ "$(ls $E_PATH|wc -l)" = "0" ]; then
+    echo "(none)";
+  else
+    ls $E_PATH;
+  fi;
 fi;
