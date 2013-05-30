@@ -1,0 +1,30 @@
+#!/bin/bash
+
+source /etc/iprules.conf;
+
+IPTABLES_RESTORE=`which iptables-restore`;
+IPTABLES=`which iptables`;
+
+usage() {
+  echo "Usage: iprules <action>
+
+Actions:
+  reload        load the enabled rules into iptables
+  flush         flush iptables and the rules file
+  build         build the rules file from the enabled rules
+  show		show the currently enabled rules
+  avail		list the available rules
+  enabled       list the enabled rules
+";
+}
+
+case "$1" in
+  "reload")     $0 rebuild && $IPTABLES_RESTORE < $RULES_FILE ;;
+  "flush")      $IPTABLES -F && cat "" > $RULES_FILE ;;
+  "build")      iprules-build ;;
+  "show")       cat $E_PATH/*|less ;;
+  "available")  ls -1 $A_PATH ;;
+  "avail")      ls -1 $A_PATH ;;
+  "enabled")    ls -1 $E_PATH ;;
+  *)            usage ;;
+esac;

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-source /etc/iptrules.conf
+source /etc/iprules.conf
 
 # Check if it's enabled
 if [ -e "$E_PATH/$1" ]; then
-  echo "$1 rules already enabled.";
+  echo "$1 rule already enabled.";
   exit 0;
 fi;
 
@@ -22,11 +22,11 @@ if [ "$(grep -P '^#' $A_PATH/$1|wc -l)" != 0 ]; then
   echo "";
 fi;
 
-ln -s "$A_PATH/$1" "$E_PATH/$1";
+ln -s "$A_PATH/$1" "$E_PATH/$1" &&
+echo "$1 rules enabled" &&
+echo "$RELOAD_REMINDER";
 
-if [ "$?" != "0" ]; then
-  echo "Unable to enable $1 rules";
+if ! [ -e "$E_PATH/$1" ]; then
+  echo "ERROR: Could not enable $1 rules";
   exit 1;
 fi;
-
-echo "$1 rules enabled";

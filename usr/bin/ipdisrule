@@ -1,0 +1,16 @@
+#!/bin/bash
+
+source /etc/iprules.conf
+
+if ! [ -e "$A_PATH/$1" ]; then
+  echo "$1 is not an available rule.";
+  exit 1;
+fi;
+
+if ! [ -e "$E_PATH/$1" ]; then
+  echo "$1 already disabled.";
+  exit 0;
+fi;
+
+unlink "$E_PATH/$1" &&
+echo "$RELOAD_REMINDER";

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+source /etc/iprules.conf
+
+usage() {
+  echo "Usage: ippol <drop|accept>";
+}
+
+[ "$1" != "" ] || usage
+
+default_drop() {
+  echo "WARNING: be sure remote access is allowed (if needed) before reloading";
+  sed -i -e "s/INPUT ACCEPT/INPUT DROP/" "$POLICY_FILE" && 
+  sed -i -e "s/FORWARD ACCEPT/FORWARD DROP/" "$POLICY_FILE" && 
+  sed -i -e "s/OUTPUT ACCEPT/OUTPUT DROP/" "$POLICY_FILE" && 
+  echo "$RELOAD_REMINDER"; 
+}
+
+default_accept() {
+  sed -i -e "s/INPUT DROP/INPUT ACCEPT/" "$POLICY_FILE" &&
+  sed -i -e "s/FORWARD DROP/FORWARD ACCEPT/" "$POLICY_FILE" &&
+  sed -i -e "s/OUTPUT DROP/OUTPUT ACCEPT/" "$POLICY_FILE" &&
+  echo "$RELOAD_REMINDER";  
+}
+
+case "$1" in
+  "--drop") default_drop ;;
+  "drop") default_drop ;;
+  "--accept") default_accept ;;
+  "accept") default_accept ;;
+  "-d") default_drop ;;
+  "d") default_drop ;;
+  "-a") default_accept ;;
+  "a") default_accept ;;
+  *) usage ;;
+esac;
