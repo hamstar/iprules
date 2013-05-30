@@ -1,17 +1,17 @@
-Package: iptrules
-Version: 0.8
+Package: iprules
+Version: 1.0
 Section: admin
 Priority: optional
 Architecture: all
 Depends: iptables
 Installed-Size: 0
 Maintainer: Robert McLeod <robert.mcleod@itpeople.co.nz>
-Description: Allows configuring iptables in the style of apache2 on debian
- iptrules allows you to use preconfigured rulefiles and custom rulefiles
+Description: iptables rule management for people who are scared of iptables
+ iprules allows you to use preconfigured rulefiles and custom rulefiles
  to configure iptables easily.
  It is inspired by the debian way of managing apache2 config files, using
  an enabled an available folder and symbolically linking between the two
  to generate a current configuration.
- The difference in the case of iptrules however is that it must generate
+ The difference in the case of iprules however is that it must generate
  a rules file instead of just specifying the enabled folder as an include.
 

@@ -61,6 +61,12 @@ ippol drop
 iprules reload
 ```
 
+You can view the iptables rules before you reload them:
+
+```sh
+iprules show
+```
+
 ## What rules come with it?
 
 You can see the list of rules in the [share folder in the source](https://github.com/hamstar/iprules/blob/master/usr/share/iprules/rules/).  If you have ideas for new ones, or see errors in the existing ones submit a patch or pull request and I will add them in.
@@ -90,3 +96,5 @@ Be very careful using the default drop policy (`ippol drop`) with remote systems
 ## Todo
 
 * add a `/etc/iptables/envvars` file so you can specify variables to use in the rule files.
+* specify priorities in the enable script e.g. `ipenrule last-rule:999`
+* allow specifying more than one rule on enable/disable scripts e.g. `ipenrule ping-in http-in`
