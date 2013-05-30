@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>iprules by hamstar</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>iprules</h1>
+        <h2>Simple iptables rules management for people who are scared of iptables</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/hamstar/iprules/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/hamstar/iprules/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/hamstar/iprules" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h2>
+<a name="what-is-this" class="anchor" href="#what-is-this"><span class="octicon octicon-link"></span></a>What is this?</h2>
+
+<p>This package is a set of scripts to manage iptables rules.  It is enspired by the method apache2 uses to manage sites on Debian systems.</p>
+
+<p>That is, one folder with available rules, that get symlinked into a folder of enabled rules.</p>
+
+<h2>
+<a name="what-is-required" class="anchor" href="#what-is-required"><span class="octicon octicon-link"></span></a>What is required?</h2>
+
+<p>Root access and iptables.</p>
+
+<h2>
+<a name="how-does-it-work" class="anchor" href="#how-does-it-work"><span class="octicon octicon-link"></span></a>How does it work?</h2>
+
+<p>In <code>/etc/iptables/rules-available</code> you have all the available rules with names you can understand and remember easily.  You then run the <code>ipenrule</code> command with the rule name as an argument and it will symlink the rule from the <code>rules-available</code> folder into <code>/etc/iptables/rules-enabled</code>.  You then need to run <code>iprules reload</code> to build the iptables script (in <code>/etc/iptables.rules</code>) and load it into iptables.  You can use <code>ipdisrule</code> in the same manner to disable a rule.</p>
+
+<p>It also uses a policy file (found in <code>/etc/iptables/policy.rules</code>) to drop or accept by default (you likely want the former).</p>
+
+<h2>
+<a name="how-to-install" class="anchor" href="#how-to-install"><span class="octicon octicon-link"></span></a>How to install</h2>
+
+<p>I have built a Debian package you can get from <a href="">here</a>.</p>
+
+<p>Otherwise you will have to clone this repo and install it manually. It's pretty straight forward, just copy all the folders (except for DEBIAN) to <code>/</code> and then run the <code>DEBIAN/postinst</code> script.</p>
+
+<h2>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<p>Here is how you would give access to your webserver and allow it to be pinged:</p>
+
+<div class="highlight"><pre>ipenrule http-in
+ipenrule ping-in
+iprules reload
+</pre></div>
+
+<p>Piece of pie.</p>
+
+<p>Drop everything except for incoming SSH packets:</p>
+
+<div class="highlight"><pre>ipenrule ssh-in
+ippol drop
+iprules reload
+</pre></div>
+
+<p>Easy as cake.</p>
+
+<p>You will probably want to do this by default:</p>
+
+<div class="highlight"><pre>ipenrule loopback
+ipenrule http-out
+ipenrule https-out
+ipenrule dns-out
+ipenrule ping-out
+ipenrule ssh-out
+ipenrule ssh-in
+ippol drop
+iprules reload
+</pre></div>
+
+<p>You can view the iptables rules before you reload them:</p>
+
+<div class="highlight"><pre>iprules show
+</pre></div>
+
+<h2>
+<a name="what-rules-come-with-it" class="anchor" href="#what-rules-come-with-it"><span class="octicon octicon-link"></span></a>What rules come with it?</h2>
+
+<p>You can see the list of rules in the <a href="https://github.com/hamstar/iprules/blob/master/usr/share/iprules/rules/">share folder in the source</a>.  If you have ideas for new ones, or see errors in the existing ones submit a patch or pull request and I will add them in.</p>
+
+<h2>
+<a name="can-i-write-my-own-rules" class="anchor" href="#can-i-write-my-own-rules"><span class="octicon octicon-link"></span></a>Can I write my own rules?</h2>
+
+<p>You most certainly can.  IPrules makes it easy to manage your iptables rules... if you know the iptables syntax... but you know how to use google right?</p>
+
+<p>Just make your own file in <code>/etc/iptables/rules-available</code> (as root) and then you can use <code>ipenrule</code> and <code>ipdisrule</code> on it.  If you change it when it's already enabled, simply run <code>iprules reload</code> again.</p>
+
+<p>If you make an error in the syntax, iptables won't accept it and will fail to reload.</p>
+
+<p>If you put comments in the file, they will be printed out when the rule is enabled:</p>
+
+<div class="highlight"><pre><span class="nv">$ </span>ipenrule synflood-protect
+
+Notes from synflood-protect rules:
+* need to <span class="nb">set </span>net.ipv4.tcp_syncookies<span class="o">=</span>1 in /etc/sysctl.conf
+* need to <span class="nb">set </span>net.netfilter.nf_conntrack_tcp_timeout_syn_recv<span class="o">=</span>30 in /etc/sysctl.conf
+
+synflood-protect rules enabled
+Remember to run <span class="s1">'ipules reload'</span> to activate the configuration.
+</pre></div>
+
+<h2>
+<a name="enable-the-rules-on-boot" class="anchor" href="#enable-the-rules-on-boot"><span class="octicon octicon-link"></span></a>Enable the rules on boot</h2>
+
+<p>If you have the package <strong>iptables-persistent</strong> installed on Debian, it will already do this.  RPM based distro's should do this out of the box but may use the file <code>/etc/sysconfig/iptables</code> instead.  So delete that file and make a symlink to the rules file (<code>ln -s /etc/iptables.rules /etc/sysconfig/iptables</code>.</p>
+
+<p>If neither of these is the case, you can just add this line to <code>/etc/rc.local</code>:</p>
+
+<div class="highlight"><pre><span class="sb">`</span>which iptables-restore<span class="sb">`</span> &lt; /etc/iptables.rules;
+</pre></div>
+
+<h2>
+<a name="warning" class="anchor" href="#warning"><span class="octicon octicon-link"></span></a>WARNING</h2>
+
+<p>Be very careful using the default drop policy (<code>ippol drop</code>) with remote systems.  If you have not allowed SSH in then you will lock yourself out!</p>
+
+<h2>
+<a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a>Todo</h2>
+
+<ul>
+<li>add a <code>/etc/iptables/envvars</code> file so you can specify variables to use in the rule files.</li>
+<li>specify priorities in the enable script e.g. <code>ipenrule last-rule:999</code>
+</li>
+<li>allow specifying more than one rule on enable/disable scripts e.g. <code>ipenrule ping-in http-in</code>
+</li>
+</ul>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
