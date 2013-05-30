@@ -21,7 +21,7 @@ copy_rules() {
 if [ "$(ls $A_PATH|wc -l)" = "0" ]; then
   copy_rules;
 else
-  echo -n "Do you want to install default rules? [y/o/N]: ";
+  echo -n "Do you want to install default rules? [y]es,[N]o,[o]verwrite: ";
   read ANS;
   case "$ANS" in
     "o")  copy_rules ;;     # overwrite
