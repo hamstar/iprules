@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /etc/iptrules.conf;
+source /etc/iprules.conf;
 
 # Create the rules file if none exists
 if ! [ -f "$RULES_FILE" ]; then
@@ -10,11 +10,11 @@ fi;
 # Copy over the policy file if none exists
 if ! [ -f "$POLICY_FILE" ]; then
   echo "Installing default accept policy file ($POLICY_FILE)"
-  cp "/usr/share/iptrules/contrib/policy.rules" "$POLICY_FILE";
+  cp "/usr/share/iprules/contrib/policy.rules" "$POLICY_FILE";
 fi;
 
 copy_rules() {
-  cp /usr/share/iptrules/rules/* "$A_PATH" $1;
+  cp /usr/share/iprules/rules/* "$A_PATH" $1;
 }
 
 # Copy over the rules if wanted
@@ -28,11 +28,10 @@ else
     "O")  copy_rules ;;     # overwrite
     "y")  copy_rules -n ;;  # don't overwrite
     "Y")  copy_rules -n ;;  # don't overwrite
-    *)  echo "You can find default rules in /usr/share/iptrules/rules/" ;;
+    *)  echo "You can find default rules in /usr/share/iprules/rules/" ;;
   esac;
 fi;
 
 # Protect everything for root only access
-chown root:root /etc/iptables* /etc/iptrules.conf -R
-chmod o-rwx /etc/iptables* /etc/iptrules.conf -R
-chmod o-rwx /usr/bin/ipt*
+chown root:root /etc/iptables* /etc/iprules.conf -R
+chmod o-rwx /etc/iptables* /etc/iprules.conf -R
