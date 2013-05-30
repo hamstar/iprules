@@ -79,6 +79,19 @@ Just make your own file in `/etc/iptables/rules-available` (as root) and then yo
 
 If you make an error in the syntax, iptables won't accept it and will fail to reload.
 
+If you put comments in the file, they will be printed out when the rule is enabled:
+
+```sh
+$ ipenrule synflood-protect
+
+Notes from synflood-protect rules:
+* need to set net.ipv4.tcp_syncookies=1 in /etc/sysctl.conf
+* need to set net.netfilter.nf_conntrack_tcp_timeout_syn_recv=30 in /etc/sysctl.conf
+
+synflood-protect rules enabled
+Remember to run 'ipules reload' to activate the configuration.
+```
+
 ## Enable the rules on boot
 
 If you have the package **iptables-persistent** installed on Debian, it will already do this.  RPM based distro's should do this out of the box but may use the file `/etc/sysconfig/iptables` instead.  So delete that file and make a symlink to the rules file (`ln -s /etc/iptables.rules /etc/sysconfig/iptables`.
