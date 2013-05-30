@@ -1,0 +1,2 @@
+-A INPUT -m tcp -p tcp --sport 443 -j ACCEPT
+-A OUTPUT -m tcp -p tcp --dport 443 -j ACCEPT
