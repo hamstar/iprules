@@ -10,21 +10,20 @@ usage() {
 
 Actions:
   reload        load the enabled rules into iptables
-  flush         flush iptables and the rules file
   build         build the rules file from the enabled rules
-  show		show the currently enabled rules
-  avail		list the available rules
-  enabled       list the enabled rules
+  show	      	show the currently enabled rules
+  avail|av      list the available rules
+  enabled|en    list the enabled rules
 ";
 }
 
 case "$1" in
-  "reload")     $0 rebuild && $IPTABLES_RESTORE < $RULES_FILE ;;
-  "flush")      $IPTABLES -F && cat "" > $RULES_FILE ;;
+  "reload")     $0 build && $IPTABLES_RESTORE < $RULES_FILE && echo "Reloaded rules." ;;
   "build")      iprules-build ;;
-  "show")       cat $E_PATH/*|less ;;
-  "available")  ls -1 $A_PATH ;;
+  "show")       cat $POLICY_FILE $E_PATH/*|less ;;
+  "av")         ls -1 $A_PATH ;;
   "avail")      ls -1 $A_PATH ;;
   "enabled")    ls -1 $E_PATH ;;
+  "en")         ls -1 $E_PATH ;;
   *)            usage ;;
 esac;
