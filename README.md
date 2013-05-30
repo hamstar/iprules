@@ -73,9 +73,9 @@ You can see the list of rules in the [share folder in the source](https://github
 
 ## Can I write my own rules?
 
-You most certainly can.  IPRules makes it easy to manage your iptables rules... if you know the IPTables syntax... but you know how to use google right?
+You most certainly can.  IPrules makes it easy to manage your iptables rules... if you know the iptables syntax... but you know how to use google right?
 
-Just make your own file in `/etc/iptables/rules-available` (as root) and then you can use `ipenrule` and `ipdisrule` on it.  If you change it when it's already enabled, simple run `service iprules reload` again.
+Just make your own file in `/etc/iptables/rules-available` (as root) and then you can use `ipenrule` and `ipdisrule` on it.  If you change it when it's already enabled, simply run `iprules reload` again.
 
 If you make an error in the syntax, iptables won't accept it and will fail to reload.
 
