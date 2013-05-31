@@ -21,7 +21,7 @@ It also uses a policy file (found in `/etc/iptables/policy.rules`) to drop or ac
 
 ## How to install
 
-I have built a Debian package you can get from [here](http://hamstar.github.io/iprules/downloads/iprules_1.0.2.deb).
+I have built a Debian package you can get from [here (v1.1)](http://hamstar.github.io/iprules/downloads/iprules_1.1.deb).
 
 Otherwise you will have to clone this repo and install it manually. It's pretty straight forward, just copy all the folders (except for DEBIAN) to `/` and then run the `DEBIAN/postinst` script.
 
