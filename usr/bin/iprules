@@ -1,10 +1,24 @@
 #!/bin/bash
 
+# This script is the main iprules command
+#
+# The most important function is to build and load the
+# current configuration into iptables.
+#
+# It also shows the rules that are available and enabled
+# and shows the resultant iptables rules that would be
+# applied on reloading.
+
+# Quit if not root
+[[ "$UID" != 0 ]] && echo "Must be root." && exit 1;
+
 source /etc/iprules.conf;
 
+# Set the locations of the iptables scripts
 IPTABLES_RESTORE=`which iptables-restore`;
 IPTABLES=`which iptables`;
 
+# Set the usage
 usage() {
   echo "Usage: iprules <action>
 
@@ -17,6 +31,7 @@ Actions:
 ";
 }
 
+# Check the argument and do what's required
 case "$1" in
   "reload")     $0 build && $IPTABLES_RESTORE < $RULES_FILE && echo "Reloaded rules." ;;
   "build")      iprules-build ;;
