@@ -50,13 +50,7 @@ Easy as cake.
 You will probably want to do this by default:
 
 ```sh
-ipenrule loopback
-ipenrule http-out
-ipenrule https-out
-ipenrule dns-out
-ipenrule ping-out
-ipenrule ssh-out
-ipenrule ssh-in
+ipenrule loopback http-out https-out dns-out ping-out ssh-out ssh-in
 ippol drop
 iprules reload
 ```
@@ -67,9 +61,57 @@ You can view the iptables rules before you reload them:
 iprules show
 ```
 
+Disable access to your webserver:
+
+```sh
+ipdisrule http-in https-in
+iprules reload
+```
+
+I have ommitted the script output for brevity above but it will let you know stuff:
+
+```sh
+$ ipenrule http-out hsdsd ssh-in dns-out
+Must be root.
+$ sudo ipenrule http-out hsdsd ssh-in dns-out
+http-out rules enabled
+ERROR: No such rule called: hsdsd
+ssh-in rules enabled
+dns-out rules enabled
+Remember to run 'iprules reload' to activate the configuration.
+$ sudo ippol drop
+WARNING: be sure remote access is allowed (if needed) before reloading
+Remember to run 'iprules reload' to activate the configuration.
+$ sudo iprules reload
+Rebuilt rules file.
+Reloaded rules.
+```
+
+Check out what rules are available...
+
+```sh
+$ sudo iprules av[ail]
+dns-out
+http-in
+http-out
+loopback
+synflood-protect
+```
+
+And whats enabled...
+
+```sh
+$ sudo iprules en[abled]
+dns-out
+http-out
+loopback
+```
+
 ## What rules come with it?
 
 You can see the list of rules in the [share folder in the source](https://github.com/hamstar/iprules/blob/master/usr/share/iprules/rules/).  If you have ideas for new ones, or see errors in the existing ones submit a patch or pull request and I will add them in.
+
+As above, you can also run `iprules avail` to see what rules are installed.
 
 ## Can I write my own rules?
 
@@ -89,7 +131,7 @@ Notes from synflood-protect rules:
 * need to set net.netfilter.nf_conntrack_tcp_timeout_syn_recv=30 in /etc/sysctl.conf
 
 synflood-protect rules enabled
-Remember to run 'ipules reload' to activate the configuration.
+Remember to run 'iprules reload' to activate the configuration.
 ```
 
 ## Enable the rules on boot
@@ -110,4 +152,5 @@ Be very careful using the default drop policy (`ippol drop`) with remote systems
 
 * add a `/etc/iptables/envvars` file so you can specify variables to use in the rule files.
 * specify priorities in the enable script e.g. `ipenrule last-rule:999`
-* allow specifying more than one rule on enable/disable scripts e.g. `ipenrule ping-in http-in`
+* add more rules!
+* some kind of port forwarding command maybe...?
