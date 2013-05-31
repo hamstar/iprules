@@ -1,13 +1,22 @@
 #!/bin/bash
 
+# This script sets the default policy for the default
+# iptables chains.  It won't change custom chains.
+#
+# The default policy can be either drop or accept.
+
+# Quit if not root
+[[ "$UID" != 0 ]] && echo "Must be root." && exit 1;
+
 source /etc/iprules.conf
 
 usage() {
   echo "Usage: ippol <drop|accept>";
 }
 
-[ "$1" != "" ] || usage
+[[ "$1" = "" ]] && usage && exit;
 
+# Change the policy to default drop
 default_drop() {
   echo "WARNING: be sure remote access is allowed (if needed) before reloading";
   sed -i -e "s/INPUT ACCEPT/INPUT DROP/" "$POLICY_FILE" && 
@@ -16,6 +25,7 @@ default_drop() {
   echo "$RELOAD_REMINDER"; 
 }
 
+# Change the policy to default accept
 default_accept() {
   sed -i -e "s/INPUT DROP/INPUT ACCEPT/" "$POLICY_FILE" &&
   sed -i -e "s/FORWARD DROP/FORWARD ACCEPT/" "$POLICY_FILE" &&
@@ -23,6 +33,7 @@ default_accept() {
   echo "$RELOAD_REMINDER";  
 }
 
+# Action the argument
 case "$1" in
   "--drop") default_drop ;;
   "drop") default_drop ;;
