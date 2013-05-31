@@ -1,32 +1,56 @@
 #!/bin/bash
 
-source /etc/iprules.conf
+# This script enables an iptables rules file or
+# more by symlinking the rule file (if found) 
+# from the available rules directory into the 
+# enabled rules directory.
 
-# Check if it's enabled
-if [ -e "$E_PATH/$1" ]; then
-  echo "$1 rule already enabled.";
-  exit 0;
+# Quit if not root
+[[ "$UID" != 0 ]] && echo "Must be root." && exit 1;
+
+source /etc/iprules.conf;
+CHANGED="no";
+
+# Show the usage if no rule specified
+if [ "$1" = "" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  echo "Usage: ipenrule rule [rule2] [...]";
+  exit;
 fi;
 
-# Check if there is such a rule
-if ! [ -e "$A_PATH/$1" ]; then
-  echo "No such rule called: $1";
-  exit 1;
-fi;
+# Run through each argument and enable the rule
+for RULE in $*; do
 
-# Print out the comments in case other action needs to be taken
-if [ "$(grep -P '^#' $A_PATH/$1|wc -l)" != 0 ]; then
-  echo "";
-  echo "Notes from $1 rules:";
-  grep -P '^#' "$A_PATH/$1"|sed 's/^# /* /';
-  echo "";
-fi;
+  # Check if it's enabled
+  if [ -e "$E_PATH/$RULE" ]; then
+    echo "$RULE rule already enabled.";
+    continue;
+  fi;
 
-ln -s "$A_PATH/$1" "$E_PATH/$1" &&
-echo "$1 rules enabled" &&
-echo "$RELOAD_REMINDER";
+  # Check if there is such a rule
+  if ! [ -e "$A_PATH/$RULE" ]; then
+    echo "ERROR: No such rule called: $RULE";
+    continue;
+  fi;
 
-if ! [ -e "$E_PATH/$1" ]; then
-  echo "ERROR: Could not enable $1 rules";
-  exit 1;
-fi;
+  # Print out the comments in case other action needs to be taken
+  if [ "$(grep -P '^#' $A_PATH/$RULE|wc -l)" != 0 ]; then
+    echo "";
+    echo "Notes from $RULE rules:";
+    grep -P '^#' "$A_PATH/$RULE"|sed 's/^# /* /';
+    echo "";
+  fi;
+
+  # Do the linking and print stuff if it all worked
+  ln -s "$A_PATH/$RULE" "$E_PATH/$RULE" &&
+  echo "$RULE rules enabled" &&
+  CHANGED="yes";
+
+  # Check that it was actually linked
+  if ! [ -e "$E_PATH/$RULE" ]; then
+    echo "ERROR: Could not enable $RULE rules";
+    continue;
+  fi;
+
+done;
+
+[[ "$CHANGED" = "yes" ]] && echo "$RELOAD_REMINDER";

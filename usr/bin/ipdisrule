@@ -1,16 +1,41 @@
 #!/bin/bash
 
-source /etc/iprules.conf
+# This script disables iptables rules given at command
+# line by unlinking the symlinks created by the enable
+# command. 
 
-if ! [ -e "$A_PATH/$1" ]; then
-  echo "$1 is not an available rule.";
-  exit 1;
+# Quit if not root
+[[ "$UID" != 0 ]] && echo "Must be root." && exit 1;
+
+source /etc/iprules.conf;
+CHANGED="no";
+
+# Show the usage if no rules specified
+if [ "$1" = "" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+  echo "Usage: ipdisrule rule [rule2] [...]";
+  exit;
 fi;
 
-if ! [ -e "$E_PATH/$1" ]; then
-  echo "$1 already disabled.";
-  exit 0;
-fi;
+# Run through each argument and enable the rule
+for RULE in $*; do
 
-unlink "$E_PATH/$1" &&
-echo "$RELOAD_REMINDER";
+  # If the rule does not exist 
+  if ! [ -e "$E_PATH/$RULE" ] && ! [ -e "$A_PATH/$RULE" ]; then
+    echo "ERROR: $RULE is not an available rule.";
+    continue;
+  fi;
+
+  # Check if the rule is already 
+  if ! [ -e "$E_PATH/$RULE" ]; then
+    echo "$RULE already disabled.";
+    continue;
+  fi;
+
+  # Unlink the rule
+  unlink "$E_PATH/$RULE" && 
+  echo "$RULE rules disabled." && 
+  CHANGED="yes";
+
+done;
+
+[[ "$CHANGED" = "yes" ]] && echo "$RELOAD_REMINDER";
